@@ -44,9 +44,9 @@ The package has been created with the catkin_create_pkg command. Here is an over
      - This folder is empty, if you start the demo and you save the map as csv file, it should be saved here
 ## The classes
 
-### IstiaSlam
+### PaSlam
 
-This class is the main class of the SLAM approach. It has an IstiaSlam_Map variable to handle the probability map and the cost map. It also contains the Nelder and Mead algorithm implementation.
+This class is the main class of the SLAM approach. It has an PaSlam_Map variable to handle the probability map and the cost map. It also contains the Nelder and Mead algorithm implementation.
 
 Here are the usefull methods of the class:
 
@@ -67,11 +67,11 @@ Here are the usefull methods of the class:
     geometry_msgs::Pose2D nelder_mead(const sensor_msgs::LaserScan &scan, const geometry_msgs::Pose2D& pose_init);
 ````
 
-### IstiaSlam_Map
+### PaSlam_Map
 
 This class handles the probability map and the cost map. The probability map is saved in a nav_msgs::OccupancyGrid variable. The cost map is based on a custom costmap class presented bellow. 
 
-### IstiaSlam_Costmap
+### PaSlam_Costmap
 
 This class allows to handle the cost map.
 

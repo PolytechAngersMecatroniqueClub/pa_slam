@@ -1,0 +1,45 @@
+<?xml version="1.0" ?>
+<launch>
+
+    <param name="use_sim_time" value="true"/>
+
+    <param name="maxcost2add" value="1300" />
+    <param name="cpt_no_change_val" value="2" />
+    <param name="watchdog" value="50" />
+
+    <param name="nb_ite_max" value="10" />
+
+    <param name="resolution" value="0.01" />
+    <param name="height" value="30" />
+    <param name="width" value="30" />
+
+    <param name="cost_stamp_radius" value="30" />
+
+    <param name="max_belief" value="150" />
+    <param name="min_belief" value="0" />
+    <param name="add_belief" value="25" />
+    <param name="rem_belief" value="10" />
+    <param name="threshold_belief" value="50" />
+
+    <param name="scan_topic_name" value="/scan" />
+    <param name="path_topic_name" value="/paslam/path" />
+    <param name="probmap_topic_name" value="/paslam/probmap" />
+    <param name="costmap_topic_name" value="/paslam/costmap" />
+
+    <param name="base_link_name" value="paslam_baselink" />
+    <param name="map_link_name" value="paslam_baselink" />
+    <param name="lidar_link_name" value="laser" />
+
+    <param name="path_output_map" value="$(find pa_slam)/outputs/probability_demo.csv" />
+
+
+
+    <param name="map_publishing_rate" value="100" />
+    <param name="path_publishing_rate" value="10" />
+    <param name="publish_lidar_pose_tf" value="true" />
+    
+
+    <node name="pa_slam" type= "pa_slam_node" pkg="pa_slam" output="screen">
+    </node>
+
+</launch>

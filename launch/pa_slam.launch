@@ -1,43 +1,42 @@
 <?xml version="1.0" ?>
 <launch>
 
-    <param name="use_sim_time" value="true"/>
+    <!-- PARAMETERS -->
 
-    <param name="maxcost2add" value="1300" />
-    <param name="cpt_no_change_val" value="2" />
-    <param name="watchdog" value="50" />
+    <param name="use_sim_time" value="true"/>       <!-- To use the rosbag time -->
 
-    <param name="nb_ite_max" value="10" />
+    <param name="maxcost2add"       value="1300" /> <!-- (cost) max cost to add a LiDAR scan into the map -->
+    <param name="cpt_no_change_val" value="2" />    <!-- (nb iteration) the test the Nelder and Mead result (convergence) -->
+    <param name="watchdog"          value="50" />   <!-- (nb iteration) to limit the Nelder and Mead iterations -->
 
-    <param name="resolution" value="0.01" />
-    <param name="height" value="30" />
-    <param name="width" value="30" />
+    <param name="nb_ite_max" value="10" />          <!-- (nb iteration) To use the rosbag time -->
 
-    <param name="cost_stamp_radius" value="30" />
+    <param name="resolution" value="0.020" />        <!-- (meters) size of a cell -->
+    <param name="height" value="150" />              <!-- (meters) maximal height of the map -->
+    <param name="width" value="150" />               <!-- (meters) maximal wdith of the map -->
 
-    <param name="max_belief" value="150" />
-    <param name="min_belief" value="0" />
-    <param name="add_belief" value="25" />
-    <param name="rem_belief" value="10" />
-    <param name="threshold_belief" value="50" />
+    <param name="cost_stamp_radius" value="15" />   <!-- (nb cells) size of the costmap stamp -->
 
-    <param name="scan_topic_name" value="/scan" />
-    <param name="path_topic_name" value="/paslam/path" />
-    <param name="probmap_topic_name" value="/paslam/probmap" />
-    <param name="costmap_topic_name" value="/paslam/costmap" />
+    <param name="max_belief" value="100" />         <!-- (belief) maximal value for a cell of the probability map -->
+    <param name="min_belief" value="0" />           <!-- (belief) minimal value for a cell of probability map -->
+    <param name="add_belief" value="25" />          <!-- (belief) value to add when detecting an obstacle -->
+    <param name="rem_belief" value="10" />          <!-- (belief) value to remove when removing an obstacle -->
+    <param name="threshold_belief" value="50" />    <!-- (belief) threshold to decide if a cell is an obstacle or not -->
 
-    <param name="base_link_name" value="paslam_baselink" />
-    <param name="map_link_name" value="paslam_baselink" />
-    <param name="lidar_link_name" value="laser" />
+    <param name="scan_topic_name" value="/scan" />              <!-- (string) name of the LiDAR topic -->
+    <param name="path_topic_name" value="/paslam/path" />       <!-- (string) name the topic to publish the path -->
+    <param name="probmap_topic_name" value="/paslam/probmap" /> <!-- (string) name the topic to publish the probmap -->
+    <param name="costmap_topic_name" value="/paslam/costmap" /> <!-- (string) name the topic to publish the costmap -->
 
-    <param name="path_output_map" value="$(find pa_slam)/outputs/probability_demo.csv" />
+    <param name="base_link_name" value="paslam_baselink" /> <!-- (string) the name of the base link (frame) -->
+    <param name="map_link_name" value="paslam_baselink" />  <!-- (string) the name of the map link (frame) -->
+    <param name="lidar_link_name" value="laser" />          <!-- (string) the name of the LiDAR link (frame) -->
 
+    <param name="map_publishing_rate" value="100" />    <!-- (nb iterations) number of needed LiDAR data processed before publishing the map -->
+    <param name="path_publishing_rate" value="10" />    <!-- (nb iterations) number of needed LiDAR data processed before publishing the path -->
+    <param name="publish_lidar_pose_tf" value="true" /> <!-- (bool) enable/disable to publish the transform based on the computed pose -->
 
-
-    <param name="map_publishing_rate" value="100" />
-    <param name="path_publishing_rate" value="10" />
-    <param name="publish_lidar_pose_tf" value="true" />
-    
+    <param name="path_output_map" value="$(find pa_slam)/outputs/probability_demo.csv" />   <!-- (string) file to save the map in a csv format -->
 
     <node name="pa_slam" type= "pa_slam_node" pkg="pa_slam" output="screen">
     </node>

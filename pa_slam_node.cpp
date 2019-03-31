@@ -103,9 +103,9 @@ void init_parameters(ros::NodeHandle& node){
     // LiDAR Link name (frame)
     lidar_link_name = "laser_default";
     if(node.getParam("lidar_link_name", lidar_link_name)){
-        ROS_INFO("[PASLAM_NODE] lidar link name: %s", lidar_link_name.c_str());
+        ROS_INFO("pa_slam_node::lidar link name: %s", lidar_link_name.c_str());
     }else{
-        ROS_WARN("[PASLAM_NODE] Could not get the lidar link name parameter, default value: %s", lidar_link_name.c_str());
+        ROS_WARN("pa_slam_node::Could not get the lidar link name parameter, default value: %s", lidar_link_name.c_str());
     }
     // to publish the path of the robot
     std::string path_topic_name = "/paSlam/path";
@@ -117,6 +117,24 @@ void init_parameters(ros::NodeHandle& node){
     path_pub = node.advertise<nav_msgs::Path>(path_topic_name, 1000);
 
     //  ---------- PA_SLAM VARIABLES  ---------- 
+
+    // the topic name to publish the probability map
+    std::string probmap_topic_name = "/paSlam/probmap";
+    if(node.getParam("probmap_topic_name", probmap_topic_name)){
+        ROS_INFO("pa_slam_node::probmap topic name: %s", probmap_topic_name.c_str());
+    }else{
+        ROS_WARN("pa_slam_node::Could not get the probmap topic name parameter, default value: %s", probmap_topic_name.c_str());
+    }
+    // the topic name to publish the cost map
+    std::string costmap_topic_name = "/paSlam/costmap";
+    if(node.getParam("costmap_topic_name", costmap_topic_name)){
+        ROS_INFO("pa_slam_node::costmap topic name: %s", costmap_topic_name.c_str());
+    }else{
+        ROS_WARN("pa_slam_node::Could not get the costmap topic name parameter, default value: %s", costmap_topic_name.c_str());
+    }
+
+    //  Build SLAM object
+    paSlam = new PaSlam(costmap_topic_name, probmap_topic_name);
 
     // maximal number of iterations (Nelder & Mead)
     int nb_ite_max = 30;            
@@ -204,23 +222,6 @@ void init_parameters(ros::NodeHandle& node){
         ROS_WARN("pa_slam_node::Could not get the map link name parameter, default value: %s", map_link_name.c_str());
     }
     paSlam->_map._probmap.header.frame_id = map_link_name.c_str();
-    // the topic name to publish the probability map
-    std::string probmap_topic_name = "/paSlam/probmap";
-    if(node.getParam("probmap_topic_name", probmap_topic_name)){
-        ROS_INFO("pa_slam_node::probmap topic name: %s", probmap_topic_name.c_str());
-    }else{
-        ROS_WARN("pa_slam_node::Could not get the probmap topic name parameter, default value: %s", probmap_topic_name.c_str());
-    }
-    // the topic name to publish the cost map
-    std::string costmap_topic_name = "/paSlam/costmap";
-    if(node.getParam("costmap_topic_name", costmap_topic_name)){
-        ROS_INFO("pa_slam_node::costmap topic name: %s", costmap_topic_name.c_str());
-    }else{
-        ROS_WARN("pa_slam_node::Could not get the costmap topic name parameter, default value: %s", costmap_topic_name.c_str());
-    }
-
-    //  Build SLAM object
-    paSlam = new PaSlam(costmap_topic_name, probmap_topic_name);
 
     // init the map started flag
     map_started = false;

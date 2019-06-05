@@ -37,8 +37,8 @@ void PaSlam_Map::init_maps(int height, int width, float resolution, int stamp_ra
 
     // probability map initialization
     _probmap.header.frame_id = "map_link";
-    _probmap.info.height = _height;         // cells X
-    _probmap.info.width = _width;           // cells Y
+    _probmap.info.height = _height;         // cells Y
+    _probmap.info.width = _width;           // cells X
     _probmap.info.resolution = _resolution; // m/cells;
     // The origin of the map [m, m, rad].  This is the real-world pose of the cell (0,0) in the map.(geometry_msgs/Pose)
     _probmap.info.origin.position.x = -(_width*_resolution)/2.0;
@@ -58,7 +58,7 @@ void PaSlam_Map::init_maps(int height, int width, float resolution, int stamp_ra
 // function to get the value of a given cell cx, cy
 int PaSlam_Map::prob_get_val_at(int cx, int cy){
     // we first check if the cell is inside the map and then return the value
-    if(cx >= 0 && cx < _height && cy >= 0 && cy < _width) return _probmap.data[cx+cy*_width];
+    if(cx >= 0 && cx < _width && cy >= 0 && cy < _height) return _probmap.data[cx+cy*_width];
     else{
         // -1 is returned otherwise
         ROS_ERROR("PaSlam_Map::prob_get_val_at() - %d %d is not a correct cell", cx, cy);
@@ -69,7 +69,7 @@ int PaSlam_Map::prob_get_val_at(int cx, int cy){
 // function to add a value to a given cell
 void PaSlam_Map::prob_add_val_at(int cx, int cy, int val){
     // first we check if the cells belongs to the map
-    if(cx >= 0 && cx < _height && cy >= 0 && cy < _width){
+    if(cx >= 0 && cx < _width && cy >= 0 && cy < _height){
         // we compute the index of the cell according the cell coordinates
         int id = cx+cy*_width;
         // if the cell become a new obtabcle (it was under the thresholdBelief and now goes over), it is added to the cost map
@@ -78,13 +78,13 @@ void PaSlam_Map::prob_add_val_at(int cx, int cy, int val){
         if( _probmap.data[id] + val <= _maxBelief) _probmap.data[id] += val;
         else _probmap.data[id] = _maxBelief;
     }// if the cell does not belong to the map, nothing to do but warn the user
-    else ROS_ERROR("PaSlam_Map::prob_add_val_at() - %d %d is not a correct cell", cx, cy);
+    else ROS_ERROR("PaSlam_Map::prob_add_val_at() - %d (%d) %d (%d) is not a correct cell", cx, _width, cy, _height);
 }
 
 // function to add a value to a given cell
 void PaSlam_Map::prob_rem_val_at(int cx, int cy, int val){
     // first we check if the cells belongs to the map
-    if(cx >= 0 && cx < _height && cy >= 0 && cy < _width){
+    if(cx >= 0 && cx < _width && cy >= 0 && cy < _height){
         // we compute the index of the cell according the cell coordinates
         int id = cx+cy*_width;
         // if the obstacle disapeared (it goes under the threshold), we need to remove it from the costmap
@@ -99,7 +99,7 @@ void PaSlam_Map::prob_rem_val_at(int cx, int cy, int val){
 // to update the map when an obstacle is detected (inputs are cells coordinates)
 void PaSlam_Map::obstacle_detected(int x_cell_robot, int y_cell_robot, int x_cell_obs, int y_cell_obs){
     // first we check if the cells belongs to the map
-    if(x_cell_obs >= 0 && x_cell_obs < _height && y_cell_obs >= 0 && y_cell_obs < _width){
+    if(x_cell_obs >= 0 && x_cell_obs < _width && y_cell_obs >= 0 && y_cell_obs < _height){
         // we add the obstacle in the probability map
         prob_add_val_at(x_cell_obs, y_cell_obs, _addBelief);
         // from the robot to this obstacle, the belives of a free path is updated
@@ -118,7 +118,7 @@ void PaSlam_Map::obstacle_detected(double x_robot, double y_robot, double x_obs,
 
     // then we check if the obstacle and the robot belongs to the map
     if(x_cell_r >= 0 && y_cell_r >= 0 && x_cell_o >= 0 && y_cell_o >= 0 &&
-       x_cell_r < _height && y_cell_r < _width && x_cell_o < _height && y_cell_o  < _width){
+       x_cell_r < _width && y_cell_r < _height && x_cell_o < _width && y_cell_o  < _height){
         // and we use the obstacle_detected function that needs cell coordinates
         obstacle_detected(x_cell_r, y_cell_r, x_cell_o, y_cell_o);
     } // if not, nothing to but but warn the user

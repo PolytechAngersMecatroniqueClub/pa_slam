@@ -81,7 +81,7 @@ double PaSlam::get_cost(const sensor_msgs::LaserScan &scan, const geometry_msgs:
 
     std::vector<float>::const_iterator it_msr; //using an iterator for faster loops
     for(it_msr=scan.ranges.begin(); it_msr!=scan.ranges.end(); ++it_msr){ // for all the measurements in the scan
-        if(*it_msr == 0 || *it_msr >= INFINITY || *it_msr < 0.2f || *it_msr >= 100.0f){
+        if(*it_msr == 0 || *it_msr >= INFINITY || *it_msr < 0.2f || *it_msr >= 10.0f){
             // I do not know why sometimes we go here... maybe it is because of bad scans...
         }
         else{

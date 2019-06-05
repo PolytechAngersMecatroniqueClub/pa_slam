@@ -173,7 +173,7 @@ void init_parameters(ros::NodeHandle& node){
         ROS_WARN("pa_slam_node::Could not get the cost_stamp_radius parameter, default value (nb cells): %d", cost_stamp_radius);
     }
     // initialization of the map according to the previous parameters
-    paSlam->_map.init_maps((int)(height/resolution), (int)(width/resolution), resolution, cost_stamp_radius);
+    paSlam->_map.init_maps((int)(height/resolution+resolution), (int)(width/resolution+resolution)+1, resolution, cost_stamp_radius);
     // maximal value of a cell in the probability map
     int max_belief = 100;
     if(node.getParam("max_belief", max_belief)){
